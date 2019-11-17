@@ -1,3 +1,5 @@
+fully responsive leaderboard
+
 Have a form so users can add/edit players. The form must include the following three fields: firstName:String, lastName:String, score:Integer[0,100]
 
 Display the leaderboard in a tabular format sorted by score, and lastName in ASCENDING order. Therefore, if two players have the same score, the sorting will fall back to lastName

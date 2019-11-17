@@ -57,6 +57,7 @@ function FormDialog({ handleClose, open, user, handleAddEdit }) {
         component="form"
         onSubmit={e => {
           e.preventDefault();
+          resetValues();
           handleAddEdit(user, firstName, lastName, score);
         }}
       >

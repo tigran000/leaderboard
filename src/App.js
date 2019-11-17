@@ -7,9 +7,9 @@ import LeaderboardTable from "./components/LeaderboardTable";
 let userId = 2; // simple solution as for the most cases we get id from backend
 
 const initialRows = [
-  { id: 0, firstName: "Geary", lastName: "Alice", score: 96 },
-  { id: 1, firstName: "Junge", lastName: "John", score: 96 },
-  { id: 2, firstName: "Vera", lastName: "Rob", score: 88 }
+  { id: 0, firstName: "Vera", lastName: "Rob", score: 88 },
+  { id: 1, firstName: "Geary", lastName: "Alice", score: 96 },
+  { id: 2, firstName: "Junge", lastName: "John", score: 96 }
 ];
 
 export default function SimpleTable() {

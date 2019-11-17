@@ -9,7 +9,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-export default function FormDialog({ handleClose, open, user, handleAddEdit }) {
+function FormDialog({ handleClose, open, user, handleAddEdit }) {
   const [score, setScore] = useState(50);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -20,7 +20,7 @@ export default function FormDialog({ handleClose, open, user, handleAddEdit }) {
   const handleLastNameChange = event => {
     setLastName(event.target.value);
   };
-  const setValues = () => {
+  const resetValues = () => {
     if (user) {
       setFirstName(user.firstName);
       setLastName(user.lastName);
@@ -33,17 +33,24 @@ export default function FormDialog({ handleClose, open, user, handleAddEdit }) {
   };
 
   useEffect(() => {
-    setValues();
-  }, [setValues]);
+    if (user) {
+      setFirstName(user.firstName);
+      setLastName(user.lastName);
+      setScore(user.score);
+    } else {
+      setFirstName("");
+      setLastName("");
+      setScore(50);
+    }
+  }, [user]);
 
   return (
     <Dialog
       open={open}
       onClose={() => {
         handleClose();
-        setValues();
+        resetValues();
       }}
-      aria-labelledby="form-dialog-title"
     >
       <DialogTitle>{user ? "Edit" : "Add"}</DialogTitle>
       <Box
@@ -86,7 +93,7 @@ export default function FormDialog({ handleClose, open, user, handleAddEdit }) {
           <Button
             onClick={() => {
               handleClose();
-              setValues();
+              resetValues();
             }}
             color="primary"
           >
@@ -100,3 +107,5 @@ export default function FormDialog({ handleClose, open, user, handleAddEdit }) {
     </Dialog>
   );
 }
+
+export default FormDialog;

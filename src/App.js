@@ -1,27 +1,10 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-
-import FormDialog from "./FormDialog";
-let userId = 2;
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-    overflowX: "auto"
-  },
-  table: {
-    minWidth: 650
-  }
-});
+import { produce } from "immer";
+import sortBy from "lodash.sortby";
+import AddIcon from "./components/AddIcon";
+import FormDialog from "./components/FormDialog";
+import LeaderboardTable from "./components/LeaderboardTable";
+let userId = 2; // simple solution as for the most cases we get id from backend
 
 const initialRows = [
   { id: 0, firstName: "Geary", lastName: "Alice", score: 96 },
@@ -30,30 +13,29 @@ const initialRows = [
 ];
 
 export default function SimpleTable() {
-  const classes = useStyles();
-
   const [rows, setRows] = useState(initialRows);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const handleDelete = id =>
-    setRows(prevRows => prevRows.filter(row => row.id !== id));
 
   const handleAddEdit = (user, firstName, lastName, score) => {
+    let updatedRows;
     if (user) {
-      const updatedRows = rows.map(row => {
-        if (row.id === user.id) {
-          return { id: user.id, firstName, lastName, score };
-        }
-        return row;
+      updatedRows = produce(rows, draft => {
+        draft[draft.findIndex(row => row.id === user.id)] = {
+          id: user.id,
+          firstName,
+          lastName,
+          score
+        };
       });
-
-      setRows(updatedRows);
     } else {
-      setRows([...rows, { id: ++userId, firstName, lastName, score }]);
+      updatedRows = [...rows, { id: ++userId, firstName, lastName, score }];
     }
-
+    let sortedRows = sortBy(updatedRows, ["score", "lastName"]);
+    setRows(sortedRows);
     handleClose();
   };
+
   const handleClickOpen = row => {
     setUser(row);
     setOpen(true);
@@ -62,59 +44,23 @@ export default function SimpleTable() {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleDelete = id =>
+    setRows(prevRows => prevRows.filter(row => row.id !== id));
 
   return (
-    <div>
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => handleClickOpen()}
-      >
-        ADD
-      </Button>
-      <Paper className={classes.root}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" style={{ width: "40%" }}>
-                Name
-              </TableCell>
-              <TableCell align="center" style={{ width: "30%" }}>
-                Score
-              </TableCell>
-              <TableCell align="center" style={{ width: "30%" }}>
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map(row => (
-              <TableRow key={row.id}>
-                <TableCell align="center" style={{ width: "40%" }}>
-                  {row.firstName} {row.lastName}
-                </TableCell>
-                <TableCell align="center" style={{ width: "40%" }}>
-                  {row.score}
-                </TableCell>
-                <TableCell align="center" style={{ width: "30%" }}>
-                  <IconButton onClick={() => handleClickOpen(row)}>
-                    <EditIcon color="primary" />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(row.id)}>
-                    <DeleteIcon color="secondary" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <FormDialog
-          handleClose={handleClose}
-          open={open}
-          user={user}
-          handleAddEdit={handleAddEdit}
-        />
-      </Paper>
-    </div>
+    <>
+      <AddIcon handleClickOpen={handleClickOpen} />
+      <LeaderboardTable
+        handleClickOpen={handleClickOpen}
+        rows={rows}
+        handleDelete={handleDelete}
+      />
+      <FormDialog
+        handleClose={handleClose}
+        open={open}
+        user={user}
+        handleAddEdit={handleAddEdit}
+      />
+    </>
   );
 }

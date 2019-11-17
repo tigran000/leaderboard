@@ -29,6 +29,7 @@ export default function SimpleTable() {
         };
       });
     } else {
+      setUser(null);
       updatedRows = [...rows, { id: ++userId, firstName, lastName, score }];
     }
     let sortedRows = sortBy(updatedRows, ["score", "lastName"]);

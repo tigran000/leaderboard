@@ -42,7 +42,7 @@ function LeaderboardTable({ handleClickOpen, rows, handleDelete }) {
               <TableCell align="center" style={{ width: "40%" }}>
                 {row.lastName} {row.firstName}
               </TableCell>
-              <TableCell align="center" style={{ width: "40%" }}>
+              <TableCell align="center" style={{ width: "30%" }}>
                 {row.score}
               </TableCell>
               <TableCell align="center" style={{ width: "30%" }}>

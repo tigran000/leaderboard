@@ -22,7 +22,7 @@ function LeaderboardTable({ handleClickOpen, rows, handleDelete }) {
 
   return (
     <Paper className={classes.root}>
-      <Table className={classes.table} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="center" style={{ width: "40%" }}>
